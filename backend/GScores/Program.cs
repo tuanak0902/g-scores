@@ -16,7 +16,8 @@ builder.Services.AddSwaggerGen();
 // PostgreSQL + Entity Framework Core.
 var connectionString = builder.Configuration.GetConnectionString("Default");
 
-if (string.IsNullOrWhiteSpace(connectionString)) {
+if (string.IsNullOrWhiteSpace(connectionString))
+{
     throw new InvalidOperationException(
         "Database connection string 'Default' is missing.");
 }
@@ -34,22 +35,27 @@ builder.Services.AddScoped<StudentCsvSeeder>();
 // Report queries (score distribution, top 10 of group A).
 builder.Services.AddScoped<ReportService>();
 
-// CORS: allow only the React app. Set Cors__AllowedOrigin on the host.
+// CORS: allow only the React app.
 var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"]
     ?? "http://localhost:5173";
 
 builder.Services.AddCors(options =>
-    options.AddDefaultPolicy(policy =>
-        policy.WithOrigins(allowedOrigin)
-              .AllowAnyHeader()
-              .AllowAnyMethod()));
-
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy
+            .WithOrigins(allowedOrigin)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 
 // ==========================================
 // CSV SEEDING COMMAND
 // ==========================================
-if (args.Length >= 2 && args[0] == "--seed-csv") {
+if (args.Length >= 2 && args[0] == "--seed-csv")
+{
     Console.WriteLine("Starting CSV seeder...");
 
     var csvPath = Path.GetFullPath(args[1]);
@@ -74,12 +80,13 @@ if (args.Length >= 2 && args[0] == "--seed-csv") {
 // ==========================================
 app.UseExceptionHandler();   // unhandled errors -> ProblemDetails JSON
 
-if (app.Environment.IsDevelopment()) {
+if (app.Environment.IsDevelopment())
+{
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseCors();
+app.UseCors("Frontend");
 
 app.UseAuthorization();
 
