@@ -4,7 +4,7 @@ A web app for exploring the 2024 Vietnamese national high school exam (THPT) res
 
 Built as a coding assignment for Golden Owl.
 
-[dashboard screen image](image.png)
+![dashboard screen image](image.png)
 ![search screen image](image-1.png)
 ![report screen image](image-2.png)
 ## Live demo
