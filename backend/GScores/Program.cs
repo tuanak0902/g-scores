@@ -39,11 +39,17 @@ var allowedOrigin = builder.Configuration["Cors:AllowedOrigin"]
     ?? "http://localhost:5173";
 
 builder.Services.AddCors(options =>
-    options.AddDefaultPolicy(policy =>
-        policy.WithOrigins(allowedOrigin)
-              .AllowAnyHeader()
-              .AllowAnyMethod()));
-
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy
+            .WithOrigins(
+                "https://g-scores-three.vercel.app"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 var app = builder.Build();
 
 // ==========================================
