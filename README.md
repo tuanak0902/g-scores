@@ -4,8 +4,9 @@ A web app for exploring the 2024 Vietnamese national high school exam (THPT) res
 
 Built as a coding assignment for Golden Owl.
 
-<!-- TODO: add a screenshot -->
-
+[dashboard screen image](image.png)
+![search screen image](image-1.png)
+![report screen image](image-2.png)
 ## Live demo
 
 - **App:** https://g-scores-three.vercel.app/
@@ -30,7 +31,7 @@ Built as a coding assignment for Golden Owl.
 |---|---|
 | Backend | ASP.NET Core Web API (C#, .NET 8), Entity Framework Core + Npgsql |
 | Database | PostgreSQL (hosted on Neon) |
-| Frontend | React, TypeScript, Vite, React Router, Redux Toolkit, Recharts, react-i18next, Zod |
+| Frontend | React, TypeScript, Vite, React Router, Recharts, react-i18next |
 | Hosting | Render (API), Vercel (web), Neon (database) |
 | Containers | Dockerfiles for the backend and the frontend |
 
@@ -48,8 +49,8 @@ Built as a coding assignment for Golden Owl.
 ```
 g-scores/
 ├── backend/
-│   ├── Dockerfile
 │   └── GScores/
+│       ├── Dockerfile 
 │       ├── Controllers/     API endpoints
 │       ├── Data/            DbContext and Entities/
 │       ├── Dataset/         CSV used by the seeder
@@ -61,7 +62,6 @@ g-scores/
 │       ├── Validations/     Input validation
 │       └── Program.cs
 ├── frontend/
-│   ├── Dockerfile
 │   └── src/
 │       ├── api/             API client
 │       ├── components/
@@ -80,8 +80,6 @@ g-scores/
 | GET | `/api/reports/score-distribution` | For each subject, the number of students in each of the four levels. |
 | GET | `/api/reports/top-students?group=A&limit=10` | Top students of a subject group, with their scores and total. |
 | GET | `/health` | Health check. |
-
-> Verify the routes above against your controllers before publishing and adjust if they differ.
 
 ### Rules
 
@@ -170,16 +168,11 @@ Never commit real credentials. `VITE_API_URL` is baked in at build time, so rebu
 
 ### Docker
 
-Each part has its own Dockerfile:
-
 ```bash
 # Backend
 docker build -t gscores-api ./backend
 docker run -p 8080:8080 -e ConnectionStrings__Default="..." -e Cors__AllowedOrigin="http://localhost:3000" gscores-api
 
-# Frontend
-docker build -t gscores-web --build-arg VITE_API_URL=http://localhost:8080 ./frontend
-docker run -p 3000:80 gscores-web
 ```
 
 ## Deployment
