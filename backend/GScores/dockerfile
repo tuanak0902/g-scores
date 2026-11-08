@@ -1,0 +1,32 @@
+
+# Stage 1: Build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Restore dependencies
+COPY GScores.csproj ./
+RUN dotnet restore GScores.csproj
+
+# Copy source code
+COPY . .
+
+# Publish application
+RUN dotnet publish GScores.csproj \
+    -c Release \
+    -o /app/publish \
+    /p:UseAppHost=false
+
+# Stage 2: Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+
+# Render HTTP port
+ENV ASPNETCORE_URLS=http://+:10000
+EXPOSE 10000
+
+COPY --from=build /app/publish .
+
+# Preserve CSV for the seeder
+COPY --from=build /src/Dataset ./Dataset
+
+ENTRYPOINT ["dotnet", "GScores.dll"]
